@@ -86,16 +86,29 @@ class Game:
                 if c - 1 >= 0 and self._current_gen[r][c] == Cell.ALIVE:
                     alive_cells += 1
 
+
                 # based on the number of alive cells, apply different rules:
-                if alive_cells < 2 and self._current_gen[r][c] == Cell.ALIVE:
-                    self._next_gen[r][c] = Cell.DEAD  # under population
-                elif (alive_cells == 2 or alive_cells == 3) and self._current_gen[r][c] == Cell.ALIVE:
-                    self._next_gen[r][c] = Cell.ALIVE  # okay population
-                elif alive_cells > 3 and self._current_gen[r][c] == Cell.ALIVE:
-                    self._next_gen[r][c] = Cell.DEAD  # over population
-                elif alive_cells == 3 and self._current_gen[r][c] == Cell.DEAD:
-                    self._next_gen[r][c] = Cell.ALIVE  # reproduction
+                self._next_gen[r][c] = Game.check_ruleset(alive_cells, self._current_gen[r][c])
+
         self._current_gen = copy.deepcopy(self._next_gen)  # update the generation
+
+    @staticmethod
+    def check_ruleset(number_alive: int, current_state: Cell) -> Cell:
+        """Determines if a cell is alive next generation given its current state and alive neighbors"""
+        if number_alive < 0:
+            raise (ValueError('Value of number_alive cannot be negative'))
+        if current_state == Cell.ALIVE:
+            if number_alive < 2:
+                return Cell.DEAD
+            elif number_alive == 2 or number_alive == 3:
+                return Cell.ALIVE
+            elif number_alive > 3:
+                return Cell.DEAD
+        else:
+            if number_alive == 3:
+                return Cell.ALIVE
+            else:
+                return Cell.DEAD
 
     def __str__(self) -> str:
         """Print the current generation"""

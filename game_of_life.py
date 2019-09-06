@@ -9,11 +9,6 @@ class Cell(str, Enum):
     DEAD = "."
 
 
-class CellLocation(NamedTuple):
-    row: int
-    col: int
-
-
 # Establish type aliases for CellLocations and grids of locations (a Generation)
 Generation = List[List[Cell]]
 

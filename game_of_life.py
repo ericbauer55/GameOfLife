@@ -55,37 +55,36 @@ class Game:
                 alive_cells: int = 0
                 # for each cell, count the number of alive neighbor cells (8 if statements), don't go out of bounds
                 # check North West
-                if r - 1 >= 0 and c - 1 >= 0 and self._current_gen[r][c] == Cell.ALIVE:
+                if r - 1 >= 0 and c - 1 >= 0 and self._current_gen[r - 1][c - 1] == Cell.ALIVE:
                     alive_cells += 1
 
                 # check North
-                if r - 1 >= 0 and self._current_gen[r][c] == Cell.ALIVE:
+                if r - 1 >= 0 and self._current_gen[r - 1][c] == Cell.ALIVE:
                     alive_cells += 1
 
                 # check North East
-                if r - 1 >= 0 and c + 1 < self._cols and self._current_gen[r][c] == Cell.ALIVE:
+                if r - 1 >= 0 and c + 1 < self._cols and self._current_gen[r - 1][c + 1] == Cell.ALIVE:
                     alive_cells += 1
 
                 # check East
-                if c + 1 < self._cols and self._current_gen[r][c] == Cell.ALIVE:
+                if c + 1 < self._cols and self._current_gen[r][c + 1] == Cell.ALIVE:
                     alive_cells += 1
 
                 # check South East
-                if r + 1 < self._rows and c + 1 < self._cols and self._current_gen[r][c] == Cell.ALIVE:
+                if r + 1 < self._rows and c + 1 < self._cols and self._current_gen[r + 1][c + 1] == Cell.ALIVE:
                     alive_cells += 1
 
                 # check South
-                if r + 1 < self._rows and self._current_gen[r][c] == Cell.ALIVE:
+                if r + 1 < self._rows and self._current_gen[r + 1][c] == Cell.ALIVE:
                     alive_cells += 1
 
                 # check South West
-                if r + 1 < self._rows and c - 1 >= 0 and self._current_gen[r][c] == Cell.ALIVE:
+                if r + 1 < self._rows and c - 1 >= 0 and self._current_gen[r + 1][c -1] == Cell.ALIVE:
                     alive_cells += 1
 
                 # check West
-                if c - 1 >= 0 and self._current_gen[r][c] == Cell.ALIVE:
+                if c - 1 >= 0 and self._current_gen[r][c - 1] == Cell.ALIVE:
                     alive_cells += 1
-
 
                 # based on the number of alive cells, apply different rules:
                 self._next_gen[r][c] = Game.check_ruleset(alive_cells, self._current_gen[r][c])

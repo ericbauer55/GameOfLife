@@ -30,10 +30,10 @@ class Game:
         # this next line will assign next_gen to point to the same object as current_gen
         # you can check this by saying: g = Game(); g._current_gen is g._next_gen # True
         # https://www.youtube.com/watch?v=mO_dS3rXDIs
-        #self._next_gen: Generation = self._current_gen
+        # self._next_gen: Generation = self._current_gen
         # This next way only creates a shallow copy, meaning the list of list is now a list of references
-        #self._next_gen: Generation = copy.copy(self._current_gen)
-        #self._next_gen: Generation = self._current_gen.copy()  # shallow copy
+        # self._next_gen: Generation = copy.copy(self._current_gen)
+        # self._next_gen: Generation = self._current_gen.copy()  # shallow copy
         # This final way is the way to truly copy every element
         self._next_gen: Generation = copy.deepcopy(self._current_gen)
 
@@ -127,7 +127,5 @@ class Game:
 
 
 if __name__ == '__main__':
-    random.seed(10)
-    game: Game = Game(3, 3, 0.50)
-    print(game._current_gen is game._next_gen)
-    game.simulate(3)
+    game: Game = Game(6, 30, 0.20)
+    game.simulate(20)

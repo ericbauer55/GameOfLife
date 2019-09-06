@@ -40,23 +40,53 @@ class Game:
     def _apply_rules(self, generation: Generation) -> Generation:
         """Applies the rules grid cell by grid cell to update the next generation"""
         # generations are double buffered so that the application of rules doesn't overwrite the current generation
-        next: Generation = generation.copy()
-        alive_cells: int = 0
+        next_gen: Generation = generation
         for r in range(self._rows):
             for c in range(self._cols):
-                alive_cells = 0
-                # for each cell, count the number of alive neighbor cells
+                alive_cells: int = 0
+                # for each cell, count the number of alive neighbor cells (8 if statements), don't go out of bounds
+                # check North West
+                if r - 1 >= 0 and c - 1 >= 0 and generation[r][c] == Cell.ALIVE:
+                    alive_cells += 1
+
+                # check North
+                if r - 1 >= 0 and generation[r][c] == Cell.ALIVE:
+                    alive_cells += 1
+
+                # check North East
+                if r - 1 >= 0 and c + 1 < self._cols and generation[r][c] == Cell.ALIVE:
+                    alive_cells += 1
+
+                # check East
+                if c + 1 < self._cols and generation[r][c] == Cell.ALIVE:
+                    alive_cells += 1
+
+                # check South East
+                if r + 1 < self._rows and c + 1 < self._cols and generation[r][c] == Cell.ALIVE:
+                    alive_cells += 1
+
+                # check South
+                if r + 1 < self._rows and generation[r][c] == Cell.ALIVE:
+                    alive_cells += 1
+
+                # check South West
+                if r + 1 < self._rows and c - 1 >= 0 and generation[r][c] == Cell.ALIVE:
+                    alive_cells += 1
+
+                # check West
+                if c - 1 >= 0 and generation[r][c] == Cell.ALIVE:
+                    alive_cells += 1
 
                 # based on the number of alive cells, apply different rules:
                 if alive_cells < 2 and generation[r][c] == Cell.ALIVE:
-                    next[r][c] = Cell.DEAD  # under population
+                    next_gen[r][c] = Cell.DEAD  # under population
                 elif (alive_cells == 2 or alive_cells == 3) and generation[r][c] == Cell.ALIVE:
-                    next[r][c] = Cell.ALIVE  # okay population
+                    next_gen[r][c] = Cell.ALIVE  # okay population
                 elif alive_cells > 3 and generation[r][c] == Cell.ALIVE:
-                    next[r][c] = Cell.DEAD  # over population
+                    next_gen[r][c] = Cell.DEAD  # over population
                 elif alive_cells == 3 and generation[r][c] == Cell.DEAD:
-                    next[r][c] = Cell.ALIVE  # reproduction
-        return next
+                    next_gen[r][c] = Cell.ALIVE  # reproduction
+        return next_gen
 
     def __str__(self) -> str:
         """Print the current generation"""
@@ -69,10 +99,11 @@ class Game:
     def simulate(self, n_seasons: int, verbose: bool = True):
         """Simulates the Rules of the Game of Life for n number of seasons"""
         for k in range(n_seasons):
-            self._current_gen = self._apply_rules(self._current_gen)
             if verbose:
                 print("Season #{}".format(k))
                 print(self)
+            self._current_gen = self._apply_rules(self._current_gen)
+
 
 
 if __name__ == '__main__':

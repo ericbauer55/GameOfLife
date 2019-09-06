@@ -1,9 +1,9 @@
 from typing import List, NamedTuple, TypeVar, Generic
-import enum
+from enum import Enum
 import random
 
 
-class Cell(enum):
+class Cell(str, Enum):
     ALIVE = "X"
     DEAD = "."
 
@@ -11,11 +11,10 @@ class Cell(enum):
 class CellLocation(NamedTuple):
     row: int
     col: int
-    state: Cell
 
 
 # Establish type aliases for CellLocations and grids of locations (a Generation)
-Generation = List[List[CellLocation]]
+Generation = List[List[Cell]]
 
 
 class Game:
@@ -27,27 +26,27 @@ class Game:
         self._liveliness: float = liveliness
 
         # generate random setup
-        self._current_gen: Generation = self._randomize_generation(rows, columns, liveliness)
+        self._current_gen: Generation = Game._randomize_generation(rows, columns, liveliness)
 
     @staticmethod
-    def _randomize_generation(self, rows, cols, liveliness) -> Generation:
+    def _randomize_generation(rows, cols, liveliness) -> Generation:
         """Creates a randomized generation"""
-        generation: Generation = [[c.state.join(Cell.DEAD) for c in cols] for r in rows]
-        for r in rows:
-            for c in cols:
+        generation: Generation = [[Cell.DEAD for c in range(cols)] for r in range(rows)]
+        for r in range(rows):
+            for c in range(cols):
                 if random.uniform(0, 1.0) < liveliness:
-                    generation[r][c].state = Cell.ALIVE
+                    generation[r][c] = Cell.ALIVE
         return generation
 
     def __str__(self) -> str:
         """Print the current generation"""
         output: str = ""
         for row in self._current_gen:
-            output += ["".join(c.state for c in row)]
+            output += "".join([c for c in row])
             output += "\n"
         return output
 
 
 if __name__ == '__main__':
-    game: Game = Game()
+    game: Game = Game(6, 18, 0.20)
     print(game)

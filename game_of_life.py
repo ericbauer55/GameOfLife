@@ -37,11 +37,26 @@ class Game:
                     generation[r][c] = Cell.ALIVE
         return generation
 
-    @staticmethod
-    def _apply_rules(generation: Generation) -> Generation:
+    def _apply_rules(self, generation: Generation) -> Generation:
         """Applies the rules grid cell by grid cell to update the next generation"""
         # generations are double buffered so that the application of rules doesn't overwrite the current generation
-        return generation
+        next: Generation = generation.copy()
+        alive_cells: int = 0
+        for r in range(self._rows):
+            for c in range(self._cols):
+                alive_cells = 0
+                # for each cell, count the number of alive neighbor cells
+
+                # based on the number of alive cells, apply different rules:
+                if alive_cells < 2 and generation[r][c] == Cell.ALIVE:
+                    next[r][c] = Cell.DEAD  # under population
+                elif (alive_cells == 2 or alive_cells == 3) and generation[r][c] == Cell.ALIVE:
+                    next[r][c] = Cell.ALIVE  # okay population
+                elif alive_cells > 3 and generation[r][c] == Cell.ALIVE:
+                    next[r][c] = Cell.DEAD  # over population
+                elif alive_cells == 3 and generation[r][c] == Cell.DEAD:
+                    next[r][c] = Cell.ALIVE  # reproduction
+        return next
 
     def __str__(self) -> str:
         """Print the current generation"""
